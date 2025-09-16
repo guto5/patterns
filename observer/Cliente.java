@@ -1,5 +1,7 @@
 package observer;
 
+import builder.Celular;
+
 public interface Cliente {
-    void atualizar(String modelo);
+    void atualizar(Celular novoCelular);
 }

@@ -1,37 +1,68 @@
 package builder;
 
-public class Celular {
+public class Celular implements Cloneable {
   private String marca;
   private String modelo;
   private int memoria;
   private double preco;
+  private String cor;
 
+  // Construtor privado para forçar o uso do Builder
   private Celular(Builder builder) {
     this.marca = builder.marca;
     this.modelo = builder.modelo;
     this.memoria = builder.memoria;
     this.preco = builder.preco;
+    this.cor = builder.cor;
   }
 
   public void exibirDetalhes() {
-    System.out.println("📱 " + marca + " " + modelo + " - " + memoria + "GB - R$" + preco);
+    System.out.println(
+            String.format("📱 %s %s (%s) - %dGB - R$ %.2f",
+                    this.marca, this.modelo, this.cor, this.memoria, this.preco)
+    );
   }
 
-  // --- Builder interno ---
-  public static class Builder {
-    private String marca;
-    private String modelo;
-    private int memoria;
-    private double preco;
-
-    public Builder marca(String marca) {
-      this.marca = marca;
-      return this;
+  // --- Implementação do Prototype ---
+  @Override
+  public Celular clone() {
+    try {
+      return (Celular) super.clone();
+    } catch (CloneNotSupportedException e) {
+      throw new AssertionError("Não foi possível clonar o objeto Celular", e);
     }
+  }
 
-    public Builder modelo(String modelo) {
+  // Setters para modificar as propriedades do objeto clonado
+  public void setMemoria(int memoria) {
+    this.memoria = memoria;
+  }
+
+  public void setPreco(double preco) {
+    this.preco = preco;
+  }
+
+  public void setCor(String cor) {
+    this.cor = cor;
+  }
+
+  @Override
+  public String toString() {
+    return marca + " " + modelo + " " + memoria + "GB (" + cor + ")";
+  }
+
+  // --- Builder ---
+  public static class Builder {
+    private final String marca;
+    private final String modelo;
+
+    private int memoria = 128;
+    private double preco = 0.0;
+    private String cor = "Preto";
+
+    public Builder(String marca, String modelo) {
+      this.marca = marca;
       this.modelo = modelo;
-      return this;
     }
 
     public Builder memoria(int memoria) {
@@ -41,6 +72,11 @@ public class Celular {
 
     public Builder preco(double preco) {
       this.preco = preco;
+      return this;
+    }
+
+    public Builder cor(String cor) {
+      this.cor = cor;
       return this;
     }
 
